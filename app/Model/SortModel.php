@@ -12,4 +12,4 @@ class SortModel extends Model
     public function menu(){
 		return $results = app('db')->table($this->table)->get();
 	}
-}
+}	

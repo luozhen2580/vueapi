@@ -21,10 +21,9 @@ class IndexController extends Controller
 
     public function index(){
 		
-	$results =  	$this->naviModel->findNavi();
-	$results =  	$this->sortModel->menu();
-		//$results = app('db')->table('navi')->get();
-		var_dump($results);die;
-		return $this->view('index.index', ['title' =>'hahah']);
+		$results =  	$this->naviModel->findNavi();
+		$results =  	$this->sortModel->menu();
+
+		return $this->view('index.index', $results);
 	}
 }
