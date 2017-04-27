@@ -16,7 +16,6 @@ class IndexController extends Controller
     }
 
     public function index(){
-		$this->status = 100;
 		return $this->view('index.index', ['title' =>'hahah']);
 	}
 }
