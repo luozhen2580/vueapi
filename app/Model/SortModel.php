@@ -1,15 +1,16 @@
 <?php
 namespace App\Model;
-
-use App\Exceptions\Exception;
-use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\Model;
-
-class SortModel extends Model
+use App\Model\BaseModel;
+use Illuminate\Support\Facades\DB;
+class SortModel extends BaseModel
 {
-    protected $table = 'sort';
-
+   // protected $table = 'sort';
+	public function __construct()
+    {
+        $this->table = 'sort';
+		$this->model = $db = DB::table($this->table);
+    }
     public function menu(){
-		return $results = app('db')->table($this->table)->get();
+		return $this->fetchOne(['pid'=>0,'sid'=>['1', '>']] , '*', 'sid');
 	}
 }	

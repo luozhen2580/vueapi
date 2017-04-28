@@ -13,10 +13,10 @@ class IndexController extends Controller
      */
     private $naviModel;
 	private $sortModel;
-    public function __construct(NaviModel $naviModel, SortModel $sortModel)
+    public function __construct()
     {
-        $this->naviModel = $naviModel;
-		 $this->sortModel = $sortModel;
+        $this->naviModel = new NaviModel();
+		$this->sortModel = new SortModel();
     }
 
     public function index(){
