@@ -192,7 +192,7 @@ class BaseModel extends Model
      * @return void
      */
     public function sql($sql, $type)
-    {ql
+    {
         return DB::$type($sql);
     }
 
