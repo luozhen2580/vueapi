@@ -21,54 +21,32 @@ class BaseModel extends Model
      *
      * @return void
      */
-	public function fetchOne($where = [], $field = '', $order='', $join = [] )
+	public function fetchOne($where = [], $field = [], $orderby='', $join = [] )
     { 
-        //return false;
-        DB::connection()->enableQueryLog(); 
-        //return app('db')->table($this->table)->lists('sortname');
-       // $db = $this->model;
-        
-                    //     $this->model->where(
-                    //         function($query){
-                    //             $query->where('sid','<','61');
-                    //             $query->where('pid','=','0');
-                    //         }
-                    //     )
-                    //     ->orwhere('pid', 1);
-                    //    $this->model->orderBy('sid','desc');
-                    //     $this->model->orderBy('pid','asc');
-                       // ->orderby(['sid','pid'],['desc','asc'])
-                    //    ->orderBy(function($order){
-                    //        $order->orderby('sid','asc');
-                    //    })
-                   // ->orderby([['column' => 'sid', 'direction' => 'desc'],['column' => 'pid', 'direction' => 'asc']])
-                        //$this->model->get();
- 
 
+        if(!empty($where))
+        {
+            $this->where($where);
+        }
 
- 
-    // 获取已执行的查询数组
-    //DB::table($this->table)->where(['sid'=>1,'pid'=>0])->orderBy('sid','asc')->offset(2)->limit('1')->get();
-    $where = ['sid'=>[1,'>'],'pid'=>1];
-    
-    $orderby = ['sid'=>'desc','pid'=>'asc'];
-    //$this->orderby($orderby);
-     //$this->model->orderBy('sid','desc');
-     //$this->model->orderBy('pid','asc');
-      $return = $this->where($where)->orderby($orderby)->limit(5)->get();
-    // $return = $this->model->get();
-    // DB::table($this->table)->$this->where(['sid'=>[1,'>'],'pid'=>0]);
-      //DB::table($this->table)->get();
-      
-    $log = DB::getQueryLog();
-   dd($log);   //打印sql语句
- 
- return $return;
+        if(!empty($field))
+        {
+            $this->field($field);
+        }
 
- //exit;
+        if(!empty($join))
+        {
+            $this->join($join);
+        }
 
+        if(!empty($orderby))
+        {
+            $this->orderby($orderby);
+        }
 
-        //return app('db')->table($this->table)->value($field)->get();
+        $return = $this->one();
+
+        return $return;
     }
 
     
@@ -77,9 +55,47 @@ class BaseModel extends Model
      *
      * @return void
      */
-    public function  fetchAll()
-    {
+    public function fetchAll($where = [], $field = [], $orderby='', $limit='',$offset='', $join = [] )
+    { 
+        //DB::connection()->enableQueryLog(); 
+
+        if(!empty($where))
+        {
+            $this->where($where);
+        }
+
+        if(!empty($field))
+        {
+            $this->field($field);
+        }
+
+        if(!empty($join))
+        {
+            $this->join($join);
+        }
+
+        if(!empty($orderby))
+        {
+            $this->orderby($orderby);
+        }
+
+        if(!empty($limit))
+        {
+            $this->limit($limit);
+        }
+
+        if(!empty($offset))
+        {
+            $this->offset($offset);
+        }
         
+        $return = $this->get();
+        
+       // $return = $this->where($where)->join($join)->orderby($orderby)->limit($limit)->offset($offset)->field($field)->get();
+       
+       // $log = DB::getQueryLog();
+      //  dd($log);   //打印sql语句
+      return $return;
     }
 
     /**
@@ -87,9 +103,32 @@ class BaseModel extends Model
      *
      * @return void
      */
-    public function count()
-    {
+    public function count($where = [], $field = [], $orderby='', $join = [] )
+    { 
 
+        if(!empty($where))
+        {
+            $this->where($where);
+        }
+
+        if(!empty($field))
+        {
+            $this->field($field);
+        }
+
+        if(!empty($join))
+        {
+            $this->join($join);
+        }
+
+        if(!empty($orderby))
+        {
+            $this->orderby($orderby);
+        }
+
+        $return = $this->model->count();
+
+        return $return;
     }
 
     /**
@@ -97,9 +136,13 @@ class BaseModel extends Model
      *
      * @return lastInsertID
      */
-    public function insert()
+    public function insert($data = [], $insertId = false)
     {
-
+        if($insertId){
+            return $this->model->insertGetId($data);
+        }else{
+            return $this->model->insert($data);
+        }
     }
 
     /**
@@ -107,9 +150,13 @@ class BaseModel extends Model
      *
      * @return void
      */
-    public function updateData()
+    public function updateData($where = [], $data = [])
     {
+        if(!empty($where)){
+             $this->where($where);
+        }
 
+        return $this->model->update($data);
     }
 
     /**
@@ -117,21 +164,48 @@ class BaseModel extends Model
      *
      * @return void
      */
-    public function delete()
+    public function delete($where = [])
     {
+        if(!empty($where)){
+             $this->where($where);
+        }
 
+        return $this->model->delete();
     }
 
- 
+    /**
+     * 清除整张表，也就是删除所有列并将自增ID置为0
+     *
+     * @return void
+     */
+    public function truncate()
+    {
+        return $this->model->truncate();
+    }
+
+
+    /**
+     * 数据库基础操作
+     *
+     * @param [string] $sql 执行sql语句
+     * @param [string] $type insert update select delete
+     * @return void
+     */
+    public function sql($sql, $type)
+    {ql
+        return DB::$type($sql);
+    }
+
 
     //基础方法改写
     public function where($where = [])
     {
         foreach($where as $key=>$item){
-            if(is_array($item)){
-                $this->model->where($key,$item[1],$item[0]);
-            } else {
-                $this->model->where($key, $item);
+            if(!is_array($item)){
+                $this->model->where($where[0],$where[1],$where[2]);
+                break;
+            }else{
+                 $this->model->where($item[0],$item[1],$item[2]);
             }
             
         }
@@ -145,12 +219,16 @@ class BaseModel extends Model
         return $this;
     }
 
-    function limit($limit, $offset = 0)
+    function limit($limit)
     {
-        $this->model->limit($limit)->offset($offset);
+        $this->model->limit($limit);
         return $this;
     }
 
+    public function offset($offset){
+         $this->model->offset($offset);
+         return $this;
+    }
     public function get(){
         return $this->model->get();
     }
@@ -160,7 +238,20 @@ class BaseModel extends Model
        return $this->model->first();
    }
 
-   public function join(){
-        
+   public function field($field='*')
+   {
+       return $this->model->select($field);
+   }
+   public function join($join){
+        foreach($join as $item) {
+             if(isset($item[3]) && $item[3] == 'left'){
+                $this->model->leftJoin($item[0], $item[1],'=', $item[2]);
+            }elseif(isset($item[3]) && $item[3] == 'cross'){
+                $this->model->crossJoin($item[0], $item[1],'=', $item[2]);
+            }else{
+                $this->model->join($item[0], $item[1],'=', $item[2]);
+            }
+        }
+        return $this;
    }
 }	
