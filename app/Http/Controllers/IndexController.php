@@ -26,7 +26,11 @@ class IndexController extends Controller
     }
 
     public function index(){
-		
+		// 写入一条数据至 session 中...
+		app('session')->put('key','value');
+
+		// 获取session中键值未key的数据
+		app('session')->get('key');
 		//$results =  	$this->naviModel->findNavi();
 		//$results =  	$this->sortModel->menu();
         $results =  	$this->linkModel->links();

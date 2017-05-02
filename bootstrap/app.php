@@ -59,9 +59,10 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
+ $app->middleware([
 //    App\Http\Middleware\ExampleMiddleware::class
-// ]);
+	Illuminate\Session\Middleware\StartSession::class
+ ]);
 
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
@@ -79,9 +80,15 @@ $app->singleton(
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+ //$app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+// 注册 SessionServiceProvider
+$app->register(Illuminate\Session\SessionServiceProvider::class);
+// 载入session相关配置
+$app->configure('session');
 
+// 设置session别名
+$app->alias('session', 'Illuminate\Session\SessionManager');
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
