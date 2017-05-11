@@ -16,3 +16,13 @@ $app->get('/', function () use ($app) {
 });
 
 $app->get('/index', 'IndexController@index');
+
+$app->get('/list/{id}', 'IndexController@getList');
+
+$app->get('/{gid}/info', 'IndexController@info');
+
+$app->get('/sort', 'IndexController@sort');
+
+$app->post('/login', 'IndexController@login');
+$app->get('/login', 'IndexController@login');
+$app->get('/user', 'IndexController@user');

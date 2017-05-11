@@ -254,4 +254,40 @@ class BaseModel extends Model
         }
         return $this;
    }
+
+
+   public function cn_substr_utf8($str, $length, $start=0)
+    {
+        if(strlen($str) < $start+1)
+        {
+            return '';
+        }
+        preg_match_all("/./su", $str, $ar);
+        $str = '';
+        $tstr = '';
+
+        //为了兼容mysql4.1以下版本,与数据库varchar一致,这里使用按字节截取
+        for($i=0; isset($ar[0][$i]); $i++)
+        {
+            if(strlen($tstr) < $start)
+            {
+                $tstr .= $ar[0][$i];
+            }
+            else
+            {
+                if(strlen($str) < $length + strlen($ar[0][$i]) )
+                {
+                    $str .= $ar[0][$i];
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        return $str;
+    }
+
+
+
 }	
