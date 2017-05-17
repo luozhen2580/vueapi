@@ -7,6 +7,8 @@ use  App\Model\SortModel;
 use App\Model\BlogModel;
 //use App\Model\LinkModel;
 use App\Model\UserModel;
+
+use App\Model\TagModel;
 //use App\lib\PasswordHash;
 class IndexController extends Controller
 {
@@ -20,13 +22,14 @@ class IndexController extends Controller
     private $blogModel;
    // private $linkModel;
    private $userModel;
+    private $tagModel;
     public function __construct()
     {
         //$this->naviModel = new NaviModel();
 		$this->sortModel = new SortModel();
         $this->blogModel = new BlogModel();
         $this->userModel = new UserModel();
-        //$this->linkModel = new LinkModel();
+        $this->tagModel = new TagModel();
     }
 
     // public function index(){
@@ -107,6 +110,32 @@ class IndexController extends Controller
         return $this->view('index.index', $results);
     }
 
+	/**
+     * tag
+     *
+     * @return void
+     */
+    public function tag()
+    {
+		$tag = new TagModel();
+        $results['list'] = $tag->tag();
+        
+        return $this->view('index.index', $results);
+    }
+	
+	public function tagList($tid, $tag, Request $request){
+		$page = $request->input("page");
+        if($page<1) $page = 1;
+		
+		$results['sort'] = [
+            'sortname'=>$tag,
+            'description'=>'这家伙很懒，还没填写该栏目的介绍呢~'
+        ];
+		$results['page'] = $page;
+        $results['list'] = $this->tagModel->tagList($tid, $page);
+		return $this->view('index.index', $results);
+	}
+	
     public function login(Request $request)
     {
         $username = $request->input("username");

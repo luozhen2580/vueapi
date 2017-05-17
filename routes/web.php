@@ -23,6 +23,12 @@ $app->get('/{gid}/info', 'IndexController@info');
 
 $app->get('/sort', 'IndexController@sort');
 
+$app->get('/tag', 'IndexController@tag');
+
+$app->get('/{tid}/{tag}', 'IndexController@tagList');
+
 $app->post('/login', 'IndexController@login');
+
 $app->get('/login', 'IndexController@login');
+
 $app->get('/user', 'IndexController@user');
