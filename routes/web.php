@@ -29,6 +29,6 @@ $app->get('/{tid}/{tag}', 'IndexController@tagList');
 
 $app->post('/login', 'IndexController@login');
 
-$app->get('/login', 'IndexController@login');
+//$app->get('/login', 'IndexController@login');
 
 $app->get('/user', 'IndexController@user');

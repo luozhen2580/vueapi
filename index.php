@@ -11,7 +11,7 @@
 |
 */
 // 指定允许其他域名访问  
-header('Access-Control-Allow-Origin:*');  
+///header('Access-Control-Allow-Origin:*');  
 $app = require __DIR__.'/bootstrap/app.php';
 
 /*

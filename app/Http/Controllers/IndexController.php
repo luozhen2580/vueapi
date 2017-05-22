@@ -139,8 +139,8 @@ class IndexController extends Controller
     public function login(Request $request)
     {
         $username = $request->input("username");
-        $email = $request->input("email");
-        $phone = $request->input("phone");
+      //  $email = $request->input("email");
+       // $phone = $request->input("phone");
         $password = $request->input("password");
         $results = $this->userModel->checkLogin($username, $password);
        if(!$results){
